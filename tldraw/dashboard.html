@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 100px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 300px;
+        }
+        .filter-input {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white shadow-md">
+            <div class="p-4 border-b">
+                <span class="text-lg font-semibold">Project Name</span>
+            </div>
+            <nav class="text-gray-700">
+                <a href="#" class="block py-2.5 px-4 hover:bg-gray-200">Dashboard</a>
+                <a href="#" class="block py-2.5 px-4 hover:bg-gray-200">Analysis</a>
+            </nav>
+        </div>
+
+        <!-- Main content -->
+        <div class="flex-1 p-8">
+            <div class="flex justify-between items-center mb-6">
+                <input type="text" placeholder="Search PTW" class="border p-2 rounded w-1/3">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="window.location = './create_ptw.html'">
+                    Create New PTW
+                </button>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex mb-4">
+                <input type="date" class="filter-input border p-2 rounded mr-2" placeholder="Filter by date">
+                <select class="filter-input border p-2 rounded mr-2">
+                    <option value="">Filter by status</option>
+                    <option value="Open">Open</option>
+                    <option value="Closed">Closed</option>
+                </select>
+                <select class="filter-input border p-2 rounded">
+                    <option value="">Filter by type</option>
+                    <option value="Hot Work">Hot Work</option>
+                    <option value="Cold Work">Cold Work</option>
+                    <option value="Lifting">Lifting</option>
+                </select>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white shadow-md rounded p-6">
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="text-left py-3 px-4">PTW ID</th>
+                            <th class="text-left py-3 px-4">Type</th>
+                            <th class="text-left py-3 px-4">Date</th>
+                            <th class="text-left py-3 px-4">Status</th>
+                            <th class="text-left py-3 px-4">Close</th>
+                            <th class="text-left py-3 px-4">Applicant</th>
+                            <th class="text-left py-3 px-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table rows will be inserted here -->
+                    </tbody>
+                </table>
+                <!-- Pagination -->
+                <div class="flex justify-center mt-4">
+                    <nav aria-label="Page navigation">
+                        <ul class="inline-flex items-center -space-x-px">
+                            <li>
+                                <a href="#" class="block py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                                    Previous
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="py-2 px-3 leading-tight text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">1</a>
+                            </li>
+                            <li>
+                                <a href="#" class="py-2 px-3 leading-tight text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">2</a>
+                            </li>
+                            <li>
+                                <a href="#" class="py-2 px-3 leading-tight text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">3</a>
+                            </li>
+                            <li>
+                                <a href="#" class="block py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                                    Next
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <p class="text-center text-lg font-semibold mb-4">Are you sure?</p>
+            <div class="flex justify-center">
+                <button class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded mr-2 confirm-delete">Yes</button>
+                <button class="bg-rose-500 hover:bg-rose-700 text-white font-bold py-2 px-4 rounded" onclick="closeModal()">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var supabaseUrl = 'https://iyxpyugpyisblbhdtztx.supabase.co'  // replace with your Supabase project URL
+        var supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5eHB5dWdweWlzYmxiaGR0enR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTcwMjI4MzAsImV4cCI6MjAxMjU5ODgzMH0.5ZNBX2pUCxe-uHkjTLNcqwr_1hDFCIs7iHKpaT5S29o'  // replace with your Supabase anon key
+        var supabase = supabase.createClient(supabaseUrl, supabaseKey)
+        
+        async function fetchDatabase() {
+            let { data: ptw, error } = await supabase
+            .from('ptw')
+            .select('id, section_one, created_at, staff_id, status')
+            .order('id', { ascending: false })
+            console.log(ptw)
+            return ptw
+        }
+
+        function convertTimestampz(timestampz) {
+            // Convert it to a Date object
+            let dateObject = new Date(timestampz);
+
+            // Extract date, month, and year
+            let date = dateObject.getDate(); // day of the month
+            let month = dateObject.getMonth() + 1; // month (getMonth is zero-based, so +1 is necessary)
+            let year = dateObject.getFullYear();
+            console.log(month);
+            let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            let formattedMonth = months[month-1]; // get month name
+
+            // Format it to 'DD-MMM-YYYY'
+            let formattedDate = `${date < 10 ? '0' + date : date}-${formattedMonth}-${year}`;
+
+            return formattedDate
+        }
+
+        // JavaScript for filtering and modal interactions
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Populate table with data
+            const ptw = await fetchDatabase();
+            const tableBody = document.querySelector('tbody');
+            // const data = [
+            //     { id: 123, type: 'Hot Work', date: '5/1/24', status: 'Open', close: '6/1/24', applicant: 'John' },
+            //     { id: 122, type: 'Cold Work', date: '3/1/24', status: 'Closed', close: '4/1/24', applicant: 'Mike' },
+            //     { id: 121, type: 'Lifting', date: '1/1/24', status: 'Closed', close: '2/1/24', applicant: 'Taylor' },
+            // ];
+
+            // data.forEach(item => {
+            //     const row = document.createElement('tr');
+            //     row.className = 'border-b';
+            //     row.innerHTML = `
+            //         <td class="py-3 px-4">${item.id}</td>
+            //         <td class="py-3 px-4">${item.type}</td>
+            //         <td class="py-3 px-4">${item.date}</td>
+            //         <td class="py-3 px-4 ${item.status === 'Open' ? 'text-green-500' : 'text-red-500'}">${item.status}</td>
+            //         <td class="py-3 px-4">${item.close}</td>
+            //         <td class="py-3 px-4">${item.applicant}</td>
+            //         <td class="py-3 px-4">
+            //             <button class="text-blue-500 hover:text-blue-700 mr-2">View</button>
+            //             <button class="text-red-500 hover:text-red-700" onclick="showModal()">Delete</button>
+            //         </td>
+            //     `;
+            //     tableBody.appendChild(row);
+            // });
+
+            ptw.forEach(item => {
+                const row = document.createElement('tr');
+                let timestampz = convertTimestampz(item.created_at);
+                row.className = 'border-b';
+                row.innerHTML = `
+                    <td class="py-3 px-4">${item.id}</td>
+                    <td class="py-3 px-4">${item.section_one.workType}</td>
+                    <td class="py-3 px-4">${timestampz}</td>
+                    <td class="py-3 px-4 ${item.status === 'open' ? 'text-green-500' : 'text-red-500'}">${item.status}</td>
+                    <td class="py-3 px-4">${item.close}</td>
+                    <td class="py-3 px-4">${item.staff_id}</td>
+                    <td class="py-3 px-4">
+                        <button class="bg-indigo-500 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 mr-2">View</button>
+                        <button class="bg-rose-500 text-white font-bold py-2 px-4 rounded hover:bg-rose-700" onclick="showModal(${item.id})">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        });
+
+        function showModal(row_id) {
+            console.log(row_id);
+            document.getElementById('deleteModal').querySelector('.confirm-delete').onclick = function() {
+                deleteRow(row_id);
+            }
+            document.getElementById('deleteModal').style.display = 'block';
+        }
+
+        async function deleteRow(row_id) {
+            const { error } = await supabase
+            .from('ptw')
+            .delete()
+            .eq('id', row_id)
+
+            location.reload();
+        }
+
+        function closeModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

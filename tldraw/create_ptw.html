@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 100px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 300px;
+        }
+        .filter-input {
+            margin-bottom: 1rem;
+        }
+        .radio-group button.active {
+            background-color: #FFA500; /* Orange background color */
+            color: #FFFFFF; /* White text color */
+        }
+        input[type="checkbox"] {
+            transform: scale(1.5); /* Adjust the scale factor to your preference */
+            margin-right: 5px; /* Optional: Add some spacing between the checkbox and the label */
+            margin-left: 5px;
+        }
+        .specific-date-width {
+            width: 250px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white shadow-md">
+            <div class="p-4 border-b">
+                <span class="text-lg font-semibold">Project Name</span>
+            </div>
+            <nav class="text-gray-700">
+                <a href="#" class="block py-2.5 px-4 hover:bg-gray-200">Dashboard</a>
+                <a href="#" class="block py-2.5 px-4 hover:bg-gray-200">Analysis</a>
+            </nav>
+        </div>
+
+        <!-- Main content -->
+        <div class="flex-1 p-8">
+            <h1 class="font-bold text-2xl mb-6">Create New PTW</h1>
+            <form onsubmit="return formSubmit()" id="ptwForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="applicant">
+                    Staff ID
+                </label>
+                <input class="specific-date-width shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="applicant" type="text" value="" readonly>
+                </div>
+                <div class="mb-4">
+                    
+                <label class="block text-gray-700 text-sm font-bold mb-2">
+                    Type
+                </label>
+                <div class="radio-group flex space-x-2 mb-4">
+                    <button type="button" name="typeInput" class="px-4 py-2 rounded border focus:outline-none" onclick="setActiveType(this)">Hot Work</button>
+                    <button type="button" name="typeInput" class="px-4 py-2 rounded border focus:outline-none" onclick="setActiveType(this)">Cold Work</button>
+                    <button type="button" name="typeInput" class="px-4 py-2 rounded border focus:outline-none" onclick="setActiveType(this)">Flammable Release</button>
+                    <button type="button" name="typeInput" class="px-4 py-2 rounded border focus:outline-none" onclick="setActiveType(this)">High Voltage</button>
+                    <button type="button" name="typeInput" class="px-4 py-2 rounded border focus:outline-none" onclick="setActiveType(this)">Welding & Burning</button>
+                    <button type="button" name="typeInput" class="px-4 py-2 rounded border focus:outline-none" onclick="setActiveType(this)">Lifting</button>
+                    <button type="button" name="typeInput" class="px-4 py-2 rounded border focus:outline-none" onclick="setActiveType(this)">Confined Space</button>
+                </div>
+                </div>
+                <div class="mb-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <fieldset class="border p-2">
+                        <legend class="text-sm font-bold">Mandatory</legend>
+                        <div class="flex flex-col">
+                        <label><input type="checkbox" name="mandatory" value="helmet"> Helmet</label>
+                        <label><input type="checkbox" name="mandatory" value="glass"> Glass</label>
+                        <label><input type="checkbox" name="mandatory" value="shoe"> Shoe</label>
+                        <label><input type="checkbox" name="mandatory" value="coverall"> Coverall</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="border p-2">
+                        <legend class="text-sm font-bold">Respiratory</legend>
+                        <div class="flex flex-col">
+                        <label><input type="checkbox" name="respiratory" value="half_mask"> Half Mask</label>
+                        <label><input type="checkbox" name="respiratory" value="full_face"> Full Face</label>
+                        <label><input type="checkbox" name="respiratory" value="airlines"> Airlines</label>
+                        <label><input type="checkbox" name="respiratory" value="scba"> SCBA</label>
+                        <label><input type="checkbox" name="respiratory" value="hood"> Hood</label>
+                        <label><input type="checkbox" name="respiratory" value="dust_mask"> Dust Mask</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="border p-2">
+                        <legend class="text-sm font-bold">Eye and Face</legend>
+                        <div class="flex flex-col">
+                        <label><input type="checkbox" name="eye_face" value="goggles"> Goggles</label>
+                        <label><input type="checkbox" name="eye_face" value="face_shield"> Face Shield</label>
+                        <label><input type="checkbox" name="eye_face" value="welding"> Welding</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="border p-2">
+                        <legend class="text-sm font-bold">Hearing</legend>
+                        <div class="flex flex-col">
+                        <label><input type="checkbox" name="hearing" value="ear_plug"> Ear Plug</label>
+                        <label><input type="checkbox" name="hearing" value="ear_muff"> Ear Muff</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="border p-2">
+                        <legend class="text-sm font-bold">Fall</legend>
+                        <div class="flex flex-col">
+                        <label><input type="checkbox" name="fall" value="full_body_harness"> Full Body Harness</label>
+                        <label><input type="checkbox" name="fall" value="full_arrest"> Full Arrest</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="border p-2">
+                        <legend class="text-sm font-bold">Body</legend>
+                        <div class="flex flex-col">
+                        <label><input type="checkbox" name="body_ppe" value="chemical_suit"> Chemical Suit</label>
+                        <label><input type="checkbox" name="body_ppe" value="chemical_boot"> Chemical Boot</label>
+                        <label><input type="checkbox" name="body_ppe" value="disposable_suit"> Disposable Suit</label>
+                        <label><input type="checkbox" name="body_ppe" value="apron"> Apron</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="border p-2">
+                        <legend class="text-sm font-bold">Hand Gloves</legend>
+                        <div class="flex flex-col">
+                        <label><input type="checkbox" name="hand_gloves" value="cotton"> Cotton</label>
+                        <label><input type="checkbox" name="hand_gloves" value="leather"> Leather</label>
+                        <label><input type="checkbox" name="hand_gloves" value="rubber"> Rubber</label>
+                        <label><input type="checkbox" name="hand_gloves" value="chemical"> Chemical</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="border p-2">
+                        <legend class="text-sm font-bold">Personal Equipment</legend>
+                        <div class="flex flex-col">
+                        <label><input type="checkbox" name="personal_eq" value="h2s"> H2S</label>
+                        <label><input type="checkbox" name="personal_eq" value="o2"> O2</label>
+                        <label><input type="checkbox" name="personal_eq" value="dosimeter"> Dosimeter</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="border p-2">
+                        <legend class="text-sm font-bold">Others</legend>
+                        <div class="flex flex-col">
+                        <label><input type="checkbox" name="others" value="life_jacket"> Life Jacket</label>
+                        <label><input type="checkbox" name="others" value="life_vest"> Life Vest</label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="date">
+                        Date
+                    </label>
+                    <input class="specific-date-width shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date" type="date" value="">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                        Zone
+                    </label>
+                    <div class="radio-group flex space-x-2 mb-4">
+                        <button type="button" name="zoneInput" class="px-4 py-2 rounded border focus:outline-none" onclick="setActiveZone(this)">0</button>
+                        <button type="button" name="zoneInput" class="px-4 py-2 rounded border focus:outline-none" onclick="setActiveZone(this)">1</button>
+                        <button type="button" name="zoneInput" class="px-4 py-2 rounded border focus:outline-none" onclick="setActiveZone(this)">2</button>
+                    </div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="location">
+                        Location
+                    </label>
+                    <select class="specific-date-width shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="location">
+                        <option value="WHP">WHP</option>
+                        <option value="Engine Room">Engine Room</option>
+                        <option value="Topsides">Topsides</option>
+                        <option value="Pump Room">Pump Room</option>
+                        <option value="Main Deck">Main Deck</option>
+                        <option value="Accomodation Room">Accomodation Room</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                        Description
+                    </label>
+                    <textarea class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="description" rows="3"></textarea>
+                </div>
+                <div class="flex items-center justify-start">
+                    <input type="hidden" id="typeButton" name="type" />
+                    <input type="hidden" id="zoneButton" name="zone" />
+                    <button class="mr-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Create
+                    </button>
+                    <button onclick="window.location = './dashboard.html'" class="mr-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onclick="document.getElementById('ptwForm').reset();">
+                        Cancel
+                    </button>
+                    <button class="mr-4 bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onclick="resetForm()">
+                        Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <p class="text-center text-lg font-semibold mb-4">Are you sure?</p>
+            <div class="flex justify-center">
+                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2" onclick="closeModal()">Yes</button>
+                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onclick="closeModal()">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var supabaseUrl = 'https://iyxpyugpyisblbhdtztx.supabase.co'  // replace with your Supabase project URL
+        var supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5eHB5dWdweWlzYmxiaGR0enR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTcwMjI4MzAsImV4cCI6MjAxMjU5ODgzMH0.5ZNBX2pUCxe-uHkjTLNcqwr_1hDFCIs7iHKpaT5S29o'  // replace with your Supabase anon key
+        var supabase = supabase.createClient(supabaseUrl, supabaseKey)
+
+        // // Set today's date as default for the date picker
+        document.getElementById('date').valueAsDate = new Date();
+    
+        document.addEventListener('DOMContentLoaded', async function() {
+            const fetched_staff_id = await fetchUserDetails()
+            document.getElementById('applicant').value = fetched_staff_id.staff_id
+        })
+
+        async function fetchUserDetails() {
+            const { data: { user } } = await supabase.auth.getUser()
+            console.log(user)
+
+            let { data: userDetails, error } = await supabase
+                .from('user_detail')
+                .select("*")
+                .eq('user_id', user.id)
+                .limit(1)
+                .single()
+
+            console.log(userDetails)
+            return userDetails
+        }
+
+        function removeActiveClass(elementName) {
+            let buttons = document.getElementsByName(elementName);
+            buttons.forEach(btn => btn.classList.remove('active'));
+        }
+
+        function setActiveType(button) {
+            removeActiveClass('typeInput');
+            button.classList.add('active');
+        }
+
+        function setActiveZone(button) {
+            removeActiveClass('zoneInput');
+            button.classList.add('active');
+        }
+
+        // Function to set active class for the selected button
+        // function setActiveType(element) {
+        //     let buttons = document.querySelectorAll('.radio-group button');
+        //     buttons.forEach(btn => btn.classList.remove('active'));
+        //     element.classList.add('active');
+        // }
+
+        // function setActiveZone(element) {
+        //     let buttons = document.querySelectorAll('.radio-group button');
+        //     buttons.forEach(btn => btn.classList.remove('active'));
+        //     element.classList.add('active');
+        // }
+
+        // Function to reset the form and remove active class from buttons
+        function resetForm() {
+            document.getElementById('ptwForm').reset();
+            let buttons = document.querySelectorAll('.radio-group button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+        }
+
+        function getActiveValues() {
+            let typeButtons = document.getElementsByName('typeInput');
+            let typeValue;
+            typeButtons.forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    typeValue = btn.textContent;
+                }
+            });
+
+            let zoneButtons = document.getElementsByName('zoneInput');
+            let zoneValue;
+            zoneButtons.forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    zoneValue = btn.textContent;
+                }
+            });
+
+            if(typeValue != null && zoneValue != null)  {
+                document.getElementById('typeButton').value = typeValue;
+                document.getElementById('zoneButton').value = zoneValue;
+                return true;
+            }
+            return false;
+        }
+
+        async function formSubmit() {
+            getActiveValues()
+            event.preventDefault(); // stop the form from actually submitting
+
+            // get form
+            const form = document.getElementById('ptwForm');
+            
+            // create an empty JSON object for 'section_one'
+            let section_one = {};
+        
+            // Set form data 
+            section_one.workType = form['typeButton'].value;
+            section_one.zone = form['zoneButton'].value;
+            section_one.date = form['date'].value;
+            section_one.location = form['location'].value;
+            section_one.description = form['description'].value;
+
+            if (!section_one.workType || !section_one.zone || !section_one.date || !section_one.location) {
+                // Create an error message
+                console.error("Please fill in all the required fields.");
+                return false;
+            }
+
+            section_one.aar_sign = false;
+            section_one.ra_sign = false;
+
+            section_one.ppe = {}; 
+
+            // handle checkboxes - we store them as arrays of selected options
+            ['mandatory', 'respiratory', 'eye_face', 'hearing', 'fall', 'body_ppe', 'hand_gloves', 'personal_eq', 'others'].forEach(cat => {
+                section_one.ppe[cat] = [];
+                document.querySelectorAll(`input[name=${cat}]:checked`).forEach(el => {
+                    section_one.ppe[cat].push(el.value);
+                });
+            });
+
+            // Assumes you've already initialized supabase client
+
+            try {
+                const userDetails = await fetchUserDetails();
+        
+                const { data, error } = await supabase
+                .from('ptw')
+                .insert([
+                    { 
+                        staff_id: userDetails.staff_id,  // It's already login user details
+                        section_one: section_one,
+                        project_name: 'Gumusut',
+                        status: 'open'
+                    },
+                ])
+
+                // resetForm();
+                window.location.href = "dashboard.html";
+                return false;
+        
+            } catch(error) {
+                console.log(error);
+                return false;
+            }   
+        }
+    </script>
+</body>
+</html>

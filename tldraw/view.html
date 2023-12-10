@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gumusut Approval Form</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .btn-toggle {
+    transition: background-color 0.3s;
+  }
+</style>
+</head>
+<body class="bg-gray-100">
+<div class="container mx-auto p-6">
+  <h1 class="text-3xl font-bold mb-4">Gumusut</h1>
+
+  <!-- Section 1 -->
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <h2 class="text-xl font-semibold mb-4">Section 1</h2>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Applicant</label>
+      <p class="border rounded w-full py-2 px-3 text-gray-700">Josh</p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Type</label>
+      <p class="border rounded w-full py-2 px-3 text-gray-700">Lifting</p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Date Created</label>
+      <p class="border rounded w-full py-2 px-3 text-gray-700">1 Jan 2024</p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Location</label>
+      <p class="border rounded w-full py-2 px-3 text-gray-700">West</p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+      <p class="border rounded w-full py-2 px-3 text-gray-700">Lorem Ipsum</p>
+    </div>
+    <div class="flex space-x-4 mb-4">
+      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Approving Authority</button>
+      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Supervisor</button>
+      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Receiving</button>
+    </div>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <h2 class="text-xl font-semibold mb-4">Section 2</h2>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Gas Test Required?</label>
+      <div class="flex items-center mb-4">
+        <input id="gasTestYes" name="gasTestRequired" type="radio" class="form-radio h-5 w-5 text-gray-600"><label for="gasTestYes" class="ml-2 text-gray-700">Yes</label>
+        <input id="gasTestNo" name="gasTestRequired" type="radio" class="form-radio h-5 w-5 text-gray-600 ml-6"><label for="gasTestNo" class="ml-2 text-gray-700">No</label>
+      </div>
+      <label class="block text-gray-700 text-sm font-bold mb-2">Standby Person</label>
+      <div class="flex items-center mb-4">
+        <input id="standbyYes" name="standbyPerson" type="radio" class="form-radio h-5 w-5 text-gray-600"><label for="standbyYes" class="ml-2 text-gray-700">Yes</label>
+        <input id="standbyNo" name="standbyPerson" type="radio" class="form-radio h-5 w-5 text-gray-600 ml-6"><label for="standbyNo" class="ml-2 text-gray-700">No</label>
+      </div>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">Open Gas Test</button>
+      <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">AS</button>
+    </div>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <h2 class="text-xl font-semibold mb-4">Section 3</h2>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Does this equipment</label>
+      <div class="flex items-center mb-4">
+        <input id="equipmentYes" name="equipment" type="radio" class="form-radio h-5 w-5 text-gray-600"><label for="equipmentYes" class="ml-2 text-gray-700">Yes</label>
+        <input id="equipmentNo" name="equipment" type="radio" class="form-radio h-5 w-5 text-gray-600 ml-6"><label for="equipmentNo" class="ml-2 text-gray-700">No</label>
+      </div>
+      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">AAR</button>
+    </div>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <h2 class="text-xl font-semibold mb-4">Section 4</h2>
+    <div class="flex space-x-4 mb-4">
+      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">PA</button>
+      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">AAR</button>
+    </div>
+  </div>
+
+  <!-- Daily Approval -->
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <h2 class="text-xl font-semibold mb-4">Daily Approval</h2>
+    <div class="mb-4">
+      <!-- Daily Approval for 1 Jan 2024 -->
+      <div class="flex flex-col space-y-2 mb-4">
+        <div class="flex justify-between items-center">
+          <span class="text-gray-700">1 Jan 2024</span>
+          <div class="space-x-2">
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">RA</button>
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AS</button>
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AA</button>
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">PTWC</button>
+          </div>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-700"></span>
+          <div class="space-x-2">
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">PA</button>
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AS</button>
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AA</button>
+          </div>
+        </div>
+      </div>
+      <!-- Daily Approval for 2 Jan 2024 -->
+      <div class="flex flex-col space-y-2 mb-4">
+        <div class="flex justify-between items-center">
+          <span class="text-gray-700">2 Jan 2024</span>
+          <div class="space-x-2">
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">RA</button>
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AS</button>
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AA</button>
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">PTWC</button>
+          </div>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-700"></span>
+          <div class="space-x-2">
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">PA</button>
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AS</button>
+            <button class="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AA</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center mb-4">
+      <input id="jobCompleted" type="checkbox" class="form-checkbox h-5 w-5 text-gray-600"><label for="jobCompleted" class="ml-2 text-gray-700">This job was completed</label>
+    </div>
+    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Close PTW</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Change Status?</p>
+    <button id="yesBtn" class="bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">Yes</button>
+    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">No</button>
+  </div>
+</div>
+
+<script>
+  // Get the modal
+  var modal = document.getElementById("myModal");
+
+  // Get the button that opens the modal
+  var btns = document.querySelectorAll('.btn-toggle');
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // Get the 'Yes' button in the modal
+  var yesBtn = document.getElementById("yesBtn");
+
+  // When the user clicks on the button, open the modal
+  btns.forEach(function(btn) {
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+  });
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  // When the user clicks on 'Yes', change the color of the button and close the modal
+  yesBtn.onclick = function() {
+    btns.forEach(function(btn) {
+      if (btn.classList.contains('bg-green-500')) {
+        btn.classList.remove('bg-green-500');
+        btn.classList.add('bg-yellow-500');
+      } else {
+        btn.classList.remove('bg-yellow-500');
+        btn.classList.add('bg-green-500');
+      }
+    });
+    modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>
+</body>
+</html>
