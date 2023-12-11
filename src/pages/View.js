@@ -3,12 +3,20 @@ import { Link } from 'react-router-dom'
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from 'react-router-dom'
 import RadioButton from "../components/RadioSelection"
+import ApprovingButton from "../components/ApprovingButton"
 
 const View = () => {
     const { id } = useParams()
     console.log(id)
     const [ptw, setPtw] = useState(null)
     const navigate = useNavigate()
+
+    // Section One
+    const [aarSign, setAarSign] = useState(false);
+    const [raSign, setRaSign] = useState(false);
+
+    // Section Two
+    const [asSign, setAsSign] = useState(false);
 
     const [gasTestOption, setGasTestOption] = useState("");
     const [standbyPersonOption, setStandbyPersonOption] = useState("");
@@ -28,6 +36,8 @@ const View = () => {
             if (data) {
                 console.log(data)
                 setPtw(data)
+                setAarSign(data.section_one.aar_sign.is_sign)
+                setRaSign(data.section_one.ra_sign.is_sign)
             }
         }
 
@@ -75,9 +85,8 @@ const View = () => {
                             <p className="border rounded w-full py-2 px-3 text-gray-700">Lorem Ipsum</p>
                         </div>
                         <div className="flex space-x-4 mb-4">
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Approving Authority</button>
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Supervisor</button>
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Receiving</button>
+                            <ApprovingButton status={aarSign} textName={"Approving Authority (AA)"} onStatusChange={setAarSign}/>
+                            <ApprovingButton status={raSign} textName={"Receiving Authority (RA)"} onStatusChange={setRaSign}/>
                         </div>
                     </div>
 
@@ -86,15 +95,15 @@ const View = () => {
                         <h2 className="text-xl font-semibold mb-4">Section 2</h2>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2">Gas Test Required?</label>
-                            <div className="flex items-center mb-4">
+                            <div className="flex items-center mb-4 justify-start flex-row">
                                 <RadioButton selectedOption={gasTestOption} setSelectedOption={setGasTestOption} name="gasTest" />
                             </div>
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">Open Gas Test</button>
                             <label className="block text-gray-700 text-sm font-bold mb-2">Standby Person</label>
                             <div className="flex items-center mb-4">
                                 <RadioButton selectedOption={standbyPersonOption} setSelectedOption={setStandbyPersonOption} name="standbyPerson" />
                             </div>
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">Open Gas Test</button>
-                            <button className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">AS</button>
+                            <ApprovingButton status={asSign} textName={"Authorized Supervisor (AS)"} onStatusChange={setAsSign}/>
                         </div>
                     </div>
 

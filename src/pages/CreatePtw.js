@@ -148,8 +148,14 @@ const CreatePtw = () => {
     section_one.location = location;
     section_one.description = description;
 
-    section_one.aar_sign = false;
-    section_one.ra_sign = false;
+    let aar_sign = {}
+    aar_sign.is_sign = false;
+
+    let ra_sign = {}
+    ra_sign.is_sign = false;
+
+    section_one.aar_sign = aar_sign;
+    section_one.ra_sign = ra_sign;
 
     let finalState = { ...checkedItems };
     finalState = Object.entries(finalState)
