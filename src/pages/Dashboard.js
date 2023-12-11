@@ -80,8 +80,7 @@ const Dashboard = () => {
                 <span class="text-lg font-semibold">Project Name</span>
             </div>
             <nav class="text-gray-700">
-                <a href="#" class="block py-2.5 px-4 hover:bg-gray-200">Dashboard</a>
-                <a href="#" class="block py-2.5 px-4 hover:bg-gray-200">Analysis</a>
+                <Link to="/dashboard" className="block py-2.5 px-4 hover:bg-gray-200">Dashboard</Link>
             </nav>
         </div>
             {isModalOpen && (

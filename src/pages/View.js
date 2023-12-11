@@ -21,6 +21,18 @@ const View = () => {
     const [gasTestOption, setGasTestOption] = useState("");
     const [standbyPersonOption, setStandbyPersonOption] = useState("");
 
+    // Section Three
+    const [aarSigns3, setAarSigns3] = useState(false);
+
+    const [doNotOperateBoard, setdoNotOperateBoard] = useState(false);
+    const [requireIsolation, setrequireIsolation] = useState(false);
+    const [safetyDeviceRelease, setsafetyDeviceRelease] = useState(false);
+    const [isolated, setisolated] = useState(false);
+
+    // Section Four
+    const [paSigns4, setPaSigns4] = useState(false);
+    const [aarSigns4, setAarSigns4] = useState(false);
+
     useEffect(() => {
         const fetchPtw = async () => {
             const { data, error } = await supabase
@@ -51,16 +63,14 @@ const View = () => {
                     <span className="text-lg font-semibold">Project Name</span>
                 </div>
                 <nav className="text-gray-700">
-                    <a href="#" className="block py-2.5 px-4 hover:bg-gray-200">Dashboard</a>
-                    <a href="#" className="block py-2.5 px-4 hover:bg-gray-200">Analysis</a>
+                    <Link to="/dashboard" className="block py-2.5 px-4 hover:bg-gray-200">Dashboard</Link>
                 </nav>
             </div>
             {ptw && (
             <div className="flex-1 p-8">
-                <Link to="/dashboard"><button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Dashboard</button></Link>
-                <h1 className="text-3xl font-bold mb-4">Gumusut</h1>
+                <h1 className="text-2xl font-bold mb-4">PTW {ptw.id}</h1>
 
-                {/* <div class="container mx-auto p-6"> */}
+                {/* <div className="container mx-auto p-6"> */}
                     {/* <!-- Section 1 --> */}
                     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         <h2 className="text-xl font-semibold mb-4">Section 1</h2>
@@ -85,7 +95,7 @@ const View = () => {
                             <p className="border rounded w-full py-2 px-3 text-gray-700">Lorem Ipsum</p>
                         </div>
                         <div className="flex space-x-4 mb-4">
-                            <ApprovingButton status={aarSign} textName={"Approving Authority (AA)"} onStatusChange={setAarSign}/>
+                            <ApprovingButton status={aarSign} textName={"Approving Authority (AAR)"} onStatusChange={setAarSign}/>
                             <ApprovingButton status={raSign} textName={"Receiving Authority (RA)"} onStatusChange={setRaSign}/>
                         </div>
                     </div>
@@ -93,16 +103,17 @@ const View = () => {
                     {/* <!-- Section 2 --> */}
                     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         <h2 className="text-xl font-semibold mb-4">Section 2</h2>
+                        <div className="lg:grid lg:grid-cols-4 gap-4 w-full">
+                            <div className="w-full flex-1 shadow p-6 m-4 rounded bg-neutral-100">
+                                <RadioButton selectedOption={gasTestOption} setSelectedOption={setGasTestOption} name="gasTest" title="Gas Test Required?" />
+                                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Open Gas Test</button>
+                            </div>
+                            
+                            <div className="w-full flex-1 shadow p-6 m-4 rounded bg-neutral-100">
+                                <RadioButton selectedOption={standbyPersonOption} setSelectedOption={setStandbyPersonOption} name="standbyPerson" title="Standby Person"/>
+                            </div>
+                        </div>
                         <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2">Gas Test Required?</label>
-                            <div className="flex items-center mb-4 justify-start flex-row">
-                                <RadioButton selectedOption={gasTestOption} setSelectedOption={setGasTestOption} name="gasTest" />
-                            </div>
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">Open Gas Test</button>
-                            <label className="block text-gray-700 text-sm font-bold mb-2">Standby Person</label>
-                            <div className="flex items-center mb-4">
-                                <RadioButton selectedOption={standbyPersonOption} setSelectedOption={setStandbyPersonOption} name="standbyPerson" />
-                            </div>
                             <ApprovingButton status={asSign} textName={"Authorized Supervisor (AS)"} onStatusChange={setAsSign}/>
                         </div>
                     </div>
@@ -110,13 +121,22 @@ const View = () => {
                     {/* <!-- Section 3 --> */}
                     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         <h2 className="text-xl font-semibold mb-4">Section 3</h2>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2">Does this equipment</label>
-                            <div className="flex items-center mb-4">
-                            {/* <input id="equipmentYes" name="equipment" type="radio" className="form-radio h-5 w-5 text-gray-600"><label for="equipmentYes" className="ml-2 text-gray-700">Yes</label></input>
-                            <input id="equipmentNo" name="equipment" type="radio" className="form-radio h-5 w-5 text-gray-600 ml-6"><label for="equipmentNo" className="ml-2 text-gray-700">No</label></input> */}
+                        <div className="flex items-center mb-4 justify-start flex-row">
+                            <div className="w-1/4 shadow p-6 m-4 rounded bg-neutral-100">
+                                <RadioButton selectedOption={doNotOperateBoard} setSelectedOption={setdoNotOperateBoard} name="doNotOperateBoard" title="Does Equipment" />
                             </div>
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">AAR</button>
+                            <div className="w-1/4 shadow p-6 m-4 rounded bg-neutral-100">
+                                <RadioButton selectedOption={requireIsolation} setSelectedOption={setrequireIsolation} name="requireIsolation" title="Require Isolation"/>
+                            </div>
+                            <div className="w-1/4 shadow p-6 m-4 rounded bg-neutral-100">
+                                <RadioButton selectedOption={safetyDeviceRelease} setSelectedOption={setsafetyDeviceRelease} name="safetyDeviceRelease" title="Protection Safety"/>
+                            </div>
+                            <div className="w-1/4 shadow p-6 m-4 rounded bg-neutral-100">
+                                <RadioButton selectedOption={isolated} setSelectedOption={setisolated} name="isolated" title="Equipment Isolated"/>
+                            </div>
+                        </div>
+                        <div className="mb-4">
+                            <ApprovingButton status={aarSigns3} textName={"Approving Authority (AAR)"} onStatusChange={setAarSigns3}/>
                         </div>
                     </div>
 
@@ -124,8 +144,8 @@ const View = () => {
                     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         <h2 className="text-xl font-semibold mb-4">Section 4</h2>
                         <div className="flex space-x-4 mb-4">
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">PA</button>
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">AAR</button>
+                            <ApprovingButton status={paSigns4} textName={"Permit Applicant (PA)"} onStatusChange={setPaSigns4}/>
+                            <ApprovingButton status={aarSigns4} textName={"Approving Authority (AAR)"} onStatusChange={setAarSigns4}/>
                         </div>
                     </div>
 
@@ -134,7 +154,7 @@ const View = () => {
                         <h2 className="text-xl font-semibold mb-4">Daily Approval</h2>
                         <div className="mb-4">
                             {/* <!-- Daily Approval for 1 Jan 2024 --> */}
-                            <div className="bg-slate-100 drop-shadow-lg flex flex-col space-y-2 mb-6 p-4">
+                            <div className="bg-slate-100 drop-shadow flex flex-col space-y-2 mb-6 p-4">
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-700">1 Jan 2024</span>
                                 <div className="space-x-2">
@@ -154,7 +174,7 @@ const View = () => {
                             </div>
                             </div>
                             {/* <!-- Daily Approval for 2 Jan 2024 --> */}
-                            <div className="bg-emerald-100 drop-shadow-lg flex flex-col space-y-2 mb-6 p-4">
+                            <div className="bg-emerald-100 drop-shadow flex flex-col space-y-2 mb-6 p-4">
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-700">2 Jan 2024</span>
                                 <div className="space-x-2">

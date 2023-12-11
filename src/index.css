@@ -108,7 +108,7 @@ body {
 }
 
 /* order-by buttons */
-.order-by button {
+/* .order-by button {
   margin-right: 10px;
   background: var(--primary);
   color: #fff;
@@ -117,10 +117,10 @@ body {
   border-radius: 6px;
   font-family: "Poppins";
   cursor: pointer;
-}
+} */
 
 /* Added */
-.modal {
+/* .modal {
   display: none;
   position: fixed;
   z-index: 10;
@@ -140,18 +140,22 @@ body {
   width: 80%;
   max-width: 300px;
 }
+*/
 .filter-input {
   margin-bottom: 1rem;
 }
+
 .radio-group button.active {
-  background-color: #FFA500; /* Orange background color */
-  color: #FFFFFF; /* White text color */
+  background-color: #FFA500; 
+  color: #FFFFFF;
 }
+
 input[type="checkbox"] {
-  transform: scale(1.5); /* Adjust the scale factor to your preference */
-  margin-right: 5px; /* Optional: Add some spacing between the checkbox and the label */
+  transform: scale(1.5); 
+  margin-right: 5px;
   margin-left: 5px;
 }
+
 .specific-date-width {
   width: 250px;
 }
