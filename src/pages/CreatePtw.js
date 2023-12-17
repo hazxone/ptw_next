@@ -132,11 +132,11 @@ const CreatePtw = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // if (!workType || !zoneType || !location) {
-    //   console.log("A")
-    //   setFormError('Please fill in all the fields correctly.')
-    //   return
-    // }
+    if (!workType) {
+      console.log("no worktype")
+      setFormError('Please fill in all the fields correctly.')
+      return
+    }
 
     // create an empty JSON object for 'section_one'
     let section_one = {};
@@ -150,9 +150,11 @@ const CreatePtw = () => {
 
     let aar_sign = {}
     aar_sign.is_sign = false;
+    aar_sign.sign_date = "";
 
     let ra_sign = {}
     ra_sign.is_sign = false;
+    ra_sign.sign_date = "";
 
     section_one.aar_sign = aar_sign;
     section_one.ra_sign = ra_sign;
@@ -166,6 +168,36 @@ const CreatePtw = () => {
 
     console.log(section_one)
 
+    const getDateInFuture = (days) => {
+      let date = new Date();
+      date.setDate(date.getDate() + days);
+      return date.toISOString().split('T')[0];  // returns date in 'yyyy-mm-dd' format
+    };
+
+    let dateArray = [getDateInFuture(0), getDateInFuture(1), getDateInFuture(2)];
+
+    const constructSignObject = () => ({
+      is_sign: false,
+      sign_date: ""
+    });
+    
+    const constructSection = (signs) => {
+      const section = {};
+      for (let sign of signs) {
+        section[`${sign}_sign`] = constructSignObject();
+      }
+      return section;
+    };
+    
+    let daily_approval_items = dateArray.map(date => {
+      return {
+        date: date,
+        daily_approval_section_five: constructSection(['aar', 'as', 'aa', 'ptwc']),
+        daily_approval_section_six: constructSection(['aar', 'as', 'aa']),
+        daily_approval_section_seven: constructSection(['aar', 'as', 'aa', 'ptwc']),
+      }
+    });
+
     const { data, error } = await supabase
       .from('ptw')
       .insert([
@@ -173,7 +205,8 @@ const CreatePtw = () => {
               staff_id: '1000',  // It's already login user details
               section_one: section_one,
               project_name: 'Gumusut',
-              status: 'open'
+              status: 'open',
+              daily_approval: daily_approval_items
           },
       ])
 
@@ -222,7 +255,7 @@ const CreatePtw = () => {
           <div className="flex-1 p-8">
               <h1 className="font-bold text-2xl mb-6">Create New PTW</h1>
               <form onSubmit={handleSubmit} id="ptwForm" className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-
+                  {formError && <p className="error">{formError}</p>}
                   <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                         Staff ID

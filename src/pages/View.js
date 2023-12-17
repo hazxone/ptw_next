@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate } from 'react-router-dom'
 import RadioButton from "../components/RadioSelection"
 import ApprovingButton from "../components/ApprovingButton"
+import TitleWorkType from "../components/TitleWorkType"
 
 const View = () => {
     const { id } = useParams()
@@ -68,8 +69,7 @@ const View = () => {
             </div>
             {ptw && (
             <div className="flex-1 p-8">
-                <h1 className="text-2xl font-bold mb-4">PTW {ptw.id}</h1>
-
+                <TitleWorkType ptw={ptw} />
                 {/* <div className="container mx-auto p-6"> */}
                     {/* <!-- Section 1 --> */}
                     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -79,12 +79,12 @@ const View = () => {
                             <p className="border rounded w-full py-2 px-3 text-gray-700">{ptw.staff_id}</p>
                         </div>
                         <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2">Type</label>
-                            <p className="border rounded w-full py-2 px-3 text-gray-700">{ptw.section_one.workType}</p>
-                        </div>
-                        <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2">Date Created</label>
                             <p className="border rounded w-full py-2 px-3 text-gray-700">{ptw.section_one.date}</p>
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2">Zone</label>
+                            <p className="border rounded w-full py-2 px-3 text-gray-700">{ptw.section_one.zone}</p>
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2">Location</label>
@@ -92,48 +92,53 @@ const View = () => {
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2">Description</label>
-                            <p className="border rounded w-full py-2 px-3 text-gray-700">Lorem Ipsum</p>
+                            <p className="border rounded w-full py-2 px-3 text-gray-700">{ptw.section_one.description}</p>
                         </div>
                         <div className="flex space-x-4 mb-4">
-                            <ApprovingButton status={aarSign} textName={"Approving Authority (AAR)"} onStatusChange={setAarSign}/>
-                            <ApprovingButton status={raSign} textName={"Receiving Authority (RA)"} onStatusChange={setRaSign}/>
+                            <ApprovingButton status={aarSign} textName={"Approving Authority (AAR)"} onStatusChange={setAarSign} id ={ptw.id} jsonb={ptw.section_one} section={'section_one'} position={'aar_sign'}/>
+                            <ApprovingButton status={raSign} textName={"Receiving Authority (RA)"} onStatusChange={setRaSign} id ={ptw.id} jsonb={ptw.section_one} section={'section_one'} position={'ra_sign'}/>
                         </div>
                     </div>
 
                     {/* <!-- Section 2 --> */}
                     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         <h2 className="text-xl font-semibold mb-4">Section 2</h2>
-                        <div className="lg:grid lg:grid-cols-4 gap-4 w-full">
-                            <div className="w-full flex-1 shadow p-6 m-4 rounded bg-neutral-100">
-                                <RadioButton selectedOption={gasTestOption} setSelectedOption={setGasTestOption} name="gasTest" title="Gas Test Required?" />
-                                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Open Gas Test</button>
+                            <div className="container mb-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+                                    <div className="flex-1 shadow p-6 rounded bg-neutral-100">
+                                        <RadioButton selectedOption={gasTestOption} setSelectedOption={setGasTestOption} name="gasTest" title="Gas Test Required?" />
+                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Open Gas Test</button>
+                                    </div>
+                                    
+                                    <div className="flex-1 shadow p-6 rounded bg-neutral-100">
+                                        <RadioButton selectedOption={standbyPersonOption} setSelectedOption={setStandbyPersonOption} name="standbyPerson" title="Standby Person"/>
+                                    </div>
+                                </div>
                             </div>
-                            
-                            <div className="w-full flex-1 shadow p-6 m-4 rounded bg-neutral-100">
-                                <RadioButton selectedOption={standbyPersonOption} setSelectedOption={setStandbyPersonOption} name="standbyPerson" title="Standby Person"/>
+                            <div className="mb-4">
+                                <ApprovingButton status={asSign} textName={"Authorized Supervisor (AS)"} onStatusChange={setAsSign} id ={ptw.id} section={ptw.section_one}/>
                             </div>
-                        </div>
-                        <div className="mb-4">
-                            <ApprovingButton status={asSign} textName={"Authorized Supervisor (AS)"} onStatusChange={setAsSign}/>
-                        </div>
                     </div>
 
                     {/* <!-- Section 3 --> */}
                     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         <h2 className="text-xl font-semibold mb-4">Section 3</h2>
-                        <div className="flex items-center mb-4 justify-start flex-row">
-                            <div className="w-1/4 shadow p-6 m-4 rounded bg-neutral-100">
-                                <RadioButton selectedOption={doNotOperateBoard} setSelectedOption={setdoNotOperateBoard} name="doNotOperateBoard" title="Does Equipment" />
+                        <div className="container mb-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+                                <div className="flex-1 shadow p-6 rounded bg-neutral-100">
+                                    <RadioButton selectedOption={doNotOperateBoard} setSelectedOption={setdoNotOperateBoard} name="doNotOperateBoard" title="Does Equipment need to be listed on the 'Do Not Operate Board'?" />
+                                </div>
+                                <div className="flex-1 shadow p-6 rounded bg-neutral-100">
+                                    <RadioButton selectedOption={requireIsolation} setSelectedOption={setrequireIsolation} name="requireIsolation" title="Does this work require equipment isolation?"/>
+                                </div>
+                                <div className="flex-1 shadow p-6 rounded bg-neutral-100">
+                                    <RadioButton selectedOption={safetyDeviceRelease} setSelectedOption={setsafetyDeviceRelease} name="safetyDeviceRelease" title="Is equipment Protection Safety device to be Temporary Release?"/>
+                                </div>
+                                <div className="flex-1 shadow p-6 rounded bg-neutral-100">
+                                    <RadioButton selectedOption={isolated} setSelectedOption={setisolated} name="isolated" title="Equipment isolated and/or depressurized?"/>
+                                </div>
                             </div>
-                            <div className="w-1/4 shadow p-6 m-4 rounded bg-neutral-100">
-                                <RadioButton selectedOption={requireIsolation} setSelectedOption={setrequireIsolation} name="requireIsolation" title="Require Isolation"/>
-                            </div>
-                            <div className="w-1/4 shadow p-6 m-4 rounded bg-neutral-100">
-                                <RadioButton selectedOption={safetyDeviceRelease} setSelectedOption={setsafetyDeviceRelease} name="safetyDeviceRelease" title="Protection Safety"/>
-                            </div>
-                            <div className="w-1/4 shadow p-6 m-4 rounded bg-neutral-100">
-                                <RadioButton selectedOption={isolated} setSelectedOption={setisolated} name="isolated" title="Equipment Isolated"/>
-                            </div>
+                            <h2 className="mt-4 text-sm font-medium text-orange-600 mb-4">If YES to any of the above question, equipment preparation copy must be attached at the back of the Control Room Permit Copy</h2>
                         </div>
                         <div className="mb-4">
                             <ApprovingButton status={aarSigns3} textName={"Approving Authority (AAR)"} onStatusChange={setAarSigns3}/>
@@ -143,9 +148,10 @@ const View = () => {
                     {/* <!-- Section 4 --> */}
                     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         <h2 className="text-xl font-semibold mb-4">Section 4</h2>
+                        <h2 className="text-sm font-medium text-orange-600 mb-4">We have completed Work Site Inspection as required and in out judgement the work site is safely prepared and may proceed</h2>
                         <div className="flex space-x-4 mb-4">
-                            <ApprovingButton status={paSigns4} textName={"Permit Applicant (PA)"} onStatusChange={setPaSigns4}/>
-                            <ApprovingButton status={aarSigns4} textName={"Approving Authority (AAR)"} onStatusChange={setAarSigns4}/>
+                            <ApprovingButton status={paSigns4} textName={"Permit Applicant (PA)"} onStatusChange={setPaSigns4} id ={ptw.id} section={ptw.section_one}/>
+                            <ApprovingButton status={aarSigns4} textName={"Approving Authority (AAR)"} onStatusChange={setAarSigns4} id ={ptw.id} section={ptw.section_one}/>
                         </div>
                     </div>
 
@@ -153,47 +159,44 @@ const View = () => {
                     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8">
                         <h2 className="text-xl font-semibold mb-4">Daily Approval</h2>
                         <div className="mb-4">
-                            {/* <!-- Daily Approval for 1 Jan 2024 --> */}
-                            <div className="bg-slate-100 drop-shadow flex flex-col space-y-2 mb-6 p-4">
-                            <div className="flex justify-between items-center">
-                                <span className="text-gray-700">1 Jan 2024</span>
-                                <div className="space-x-2">
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">RA</button>
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AS</button>
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AA</button>
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">PTWC</button>
+                                {ptw && ptw.daily_approval && ptw.daily_approval.map(daily =>
+                                <div key={daily.date} class="bg-slate-100 drop-shadow-lg flex mb-6 p-4">
+                                    <div class="w-1/4">
+                                        <p class="font-semibold py-2">{daily.date}</p>
+                                    </div>
+                                    <div class="w-3/4">
+                                        <div class="flex flex-col space-y-6 p-2">
+                                            <fieldset className="border border-zinc-400 p-4 rounded">
+                                                <legend className="text-sm font-bold">Section 5 - Daily Permit Approval and Release</legend>
+                                                <div class="flex space-x-2">
+                                                    <ApprovingButton textName={"Receiving Authority (AAR)"} />
+                                                    <ApprovingButton textName={"Authorized Supervisor (AS)"} />
+                                                    <ApprovingButton textName={"Approving Authority (AA)"} />
+                                                    <ApprovingButton textName={"PTW Coordinator"} />
+                                                </div>
+                                            </fieldset>
+                                            <fieldset className="border border-red-400 p-4 rounded">
+                                                <legend className="text-sm font-bold">Section 6 - Permit Extension</legend>
+                                                <div class="flex space-x-2">
+                                                    <ApprovingButton textName={"Permit Applicant (PA)"} />
+                                                    <ApprovingButton textName={"Authorized Supervisor (AS)"} />
+                                                    <ApprovingButton textName={"Approving Authority (AA)"} />
+                                                </div>
+                                            </fieldset>
+                                            <fieldset className="border border-emerald-400 p-4 rounded">
+                                                <legend className="text-sm font-bold">Section 7 - Daily Handback & Suspension</legend>
+                                                <div class="flex space-x-2">
+                                                    <ApprovingButton textName={"Permit Applicant (PA)"} />
+                                                    <ApprovingButton textName={"Authorized Supervisor (AS)"} />
+                                                    <ApprovingButton textName={"Approving Authority (AA)"} />
+                                                </div>
+                                            </fieldset>                                   
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-gray-700"></span>
-                                <div className="space-x-2">
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">PA</button>
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AS</button>
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AA</button>
-                                </div>
-                            </div>
-                            </div>
-                            {/* <!-- Daily Approval for 2 Jan 2024 --> */}
-                            <div className="bg-emerald-100 drop-shadow flex flex-col space-y-2 mb-6 p-4">
-                            <div className="flex justify-between items-center">
-                                <span className="text-gray-700">2 Jan 2024</span>
-                                <div className="space-x-2">
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">RA</button>
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AS</button>
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AA</button>
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">PTWC</button>
-                                </div>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-gray-700"></span>
-                                <div className="space-x-2">
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">PA</button>
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AS</button>
-                                <button className="btn-toggle bg-green-500 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded">AA</button>
-                            </div>
-                        </div>
+                                )}
+                            
                     </div>
-                </div>
                     <div className="flex items-center mb-4">
                         {/* <input id="jobCompleted" type="checkbox" className="form-checkbox h-5 w-5 text-gray-600"><label for="jobCompleted" className="ml-2 text-gray-700">This job was completed</label></input> */}
                     </div>

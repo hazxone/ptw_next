@@ -17,7 +17,7 @@ function RadioButton({ selectedOption, setSelectedOption, name, title }) {
             <div className="block text-gray-700 text-sm font-bold mb-2">{title}</div>
             <label 
                 for={`${id}-yes`} 
-                className={`flex p-3 specific-date-width ${selectedOption === "Yes" ? 'bg-emerald-100' : ''} 
+                className={`flex p-3 ${selectedOption === "Yes" ? 'bg-emerald-100' : ''} 
                 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400`}
             >
                 <input
@@ -33,7 +33,7 @@ function RadioButton({ selectedOption, setSelectedOption, name, title }) {
             </label>
             <label
                 for={`${id}-no`} 
-                className={`flex p-3 specific-date-width ${selectedOption === "No" ? 'bg-rose-100' : ''} 
+                className={`flex p-3 ${selectedOption === "No" ? 'bg-rose-100' : ''} 
                 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400`}
             >
                 <input 

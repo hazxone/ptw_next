@@ -6,17 +6,13 @@ import Create from "./pages/Create"
 import CreatePtw from "./pages/CreatePtw"
 import Dashboard from "./pages/Dashboard"
 import View from "./pages/View"
+import Sidebar from "./components/Sidebar"
 
 
 function App() {
   return (
     <BrowserRouter>
-      {/* <nav>
-        <h1>Supa Smoothies</h1>
-        <Link to="/">Home</Link>
-        <Link to="/create">Create New Smoothie</Link>
-        <Link to="/dashboard">Dashboard</Link>
-      </nav> */}
+      <Sidebar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
