@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "state": "doNotOperateBoard",
+        "title": "Does Equipment need to be listed on the 'Do Not Operate Board'?"
+    },
+    {
+        "id": 2,
+        "state": "requireIsolation",
+        "title": "Does this work require equipment isolation?"
+    },
+    {
+        "id": 3,
+        "state": "safetyDeviceRelease",
+        "title": "Is equipment Protection Safety device to be Temporary Release?"
+    },
+    {
+        "id": 4,
+        "state": "isolated",
+        "title": "Equipment isolated and/or depressurized?"
+    },
+    {
+        "id": 5,
+        "state": "unknown",
+        "title": "unknown"
+    }
+]

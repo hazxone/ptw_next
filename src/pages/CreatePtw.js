@@ -193,8 +193,8 @@ const CreatePtw = () => {
       return {
         date: date,
         daily_approval_section_five: constructSection(['aar', 'as', 'aa', 'ptwc']),
-        daily_approval_section_six: constructSection(['aar', 'as', 'aa']),
-        daily_approval_section_seven: constructSection(['aar', 'as', 'aa', 'ptwc']),
+        daily_approval_section_six: constructSection(['pa', 'as', 'aa']),
+        daily_approval_section_seven: constructSection(['pa', 'as', 'aa', 'ptwc']),
       }
     });
 
